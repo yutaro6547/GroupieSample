@@ -1,15 +1,14 @@
 package com.example.zukkey.groupiesample
 
-import android.databinding.DataBindingUtil
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import com.example.zukkey.groupiesample.databinding.ActivityMainBinding
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +18,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        setSupportActionBar(toolbar)
+
         val boringFancyItems = generateFancyItems(6)
         val excitingFancyItems = generateFancyItems(12)
 
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             spanCount = 3
         }
 
-        binding.recyclerView.apply {
+        recycler_view.apply {
             layoutManager = GridLayoutManager(this@MainActivity, groupAdapter.spanCount).apply {
                 spanSizeLookup = groupAdapter.spanSizeLookup
             }
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             groupAdapter.add(this)
         }
 
-        binding.floatingActionButton.setOnClickListener {
+        fab.setOnClickListener {
             excitingFancyItems.shuffle()
             excitingSection.update(excitingFancyItems)
         }
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         val rnd = Random()
         return MutableList(count) {
             val color = Color.argb(255, rnd.nextInt(256),
-                    rnd.nextInt(256),  rnd.nextInt(256))
+                    rnd.nextInt(256), rnd.nextInt(256))
             FancyItem(color, rnd.nextInt(100))
         }
     }
