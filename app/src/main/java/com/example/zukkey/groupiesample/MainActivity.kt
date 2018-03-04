@@ -20,11 +20,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        val verticalFancyItems = generateFancyItems(8)
         val boringFancyItems = generateFancyItems(6)
         val excitingFancyItems = generateFancyItems(12)
 
         val groupAdapter = GroupAdapter<ViewHolder>().apply {
-            spanCount = 3
+            spanCount = 2
         }
 
         recycler_view.apply {
@@ -32,6 +33,12 @@ class MainActivity : AppCompatActivity() {
                 spanSizeLookup = groupAdapter.spanSizeLookup
             }
             adapter = groupAdapter
+        }
+
+
+        Section(HeaderItem(R.string.app_name)).apply {
+            add(ColumnGroup(verticalFancyItems))
+            groupAdapter.add(this)
         }
 
         ExpandableGroup(ExpandableHeaderItem("Boring Group"), true).apply {

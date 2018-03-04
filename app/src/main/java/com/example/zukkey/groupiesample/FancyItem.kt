@@ -14,6 +14,6 @@ class FancyItem(@ColorInt private val color: Int,
 
     override fun getLayout(): Int = R.layout.item_fancy
 
-    override fun getSpanSize(spanCount: Int, position: Int): Int = spanCount / 3
+    override fun getSpanSize(spanCount: Int, position: Int): Int = spanCount / 2
 
 }
