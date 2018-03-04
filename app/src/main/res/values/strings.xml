@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GroupieSample</string>
+    <string name="carousel_title">CarouselSample</string>
+    <string name="carousel_subtitle">subtitle</string>
 </resources>
