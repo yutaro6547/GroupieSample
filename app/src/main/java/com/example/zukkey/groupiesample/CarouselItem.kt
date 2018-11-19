@@ -22,4 +22,13 @@ class CarouselItem(private val carouselDecoration: RecyclerView.ItemDecoration,
             addItemDecoration(carouselDecoration)
         }
     }
+
+    override fun isSameAs(other: com.xwray.groupie.Item<*>): Boolean {
+        //val temp = other as CarouselItem
+        val other2 = other
+        return if (layout != other.layout) {
+            false
+        } else id == other.id
+    }
+
 }

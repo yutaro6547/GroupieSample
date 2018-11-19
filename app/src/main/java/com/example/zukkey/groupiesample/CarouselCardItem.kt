@@ -13,4 +13,9 @@ class CarouselCardItem(@StringRes private val colorRes: String) : Item() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.carousel_text.text = colorRes
     }
+
+    fun setText(viewHolder: ViewHolder, updateText: String) {
+        viewHolder.carousel_text.text = updateText
+    }
+
 }
