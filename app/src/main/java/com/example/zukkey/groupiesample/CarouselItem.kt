@@ -8,7 +8,9 @@ import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_carousel.*
 
 class CarouselItem(private val carouselDecoration: RecyclerView.ItemDecoration,
-                   private val carouselAdapter: GroupAdapter<com.xwray.groupie.ViewHolder>) : Item() {
+                   private val carouselAdapter: GroupAdapter<com.xwray.groupie.ViewHolder>,
+                   private val itemId: Long
+) : Item(itemId) {
 
     override fun getLayout(): Int {
         return R.layout.item_carousel
@@ -23,12 +25,26 @@ class CarouselItem(private val carouselDecoration: RecyclerView.ItemDecoration,
         }
     }
 
-    override fun isSameAs(other: com.xwray.groupie.Item<*>): Boolean {
-        //val temp = other as CarouselItem
-        val other2 = other
-        return if (layout != other.layout) {
-            false
-        } else id == other.id
+//    override fun getId(): Long {
+//        return super.getId()
+//    }
+
+    override fun isSameAs(other: com.xwray.groupie.Item<*>?): Boolean {
+        if (other is CarouselItem) {
+            return itemId == other.id
+        }
+        return false
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is CarouselItem) {
+            return itemId == other.id
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return carouselAdapter.hashCode()
     }
 
 }

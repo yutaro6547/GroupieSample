@@ -18,4 +18,22 @@ class CarouselCardItem(@StringRes private val colorRes: String) : Item() {
         viewHolder.carousel_text.text = updateText
     }
 
+    override fun isSameAs(other: com.xwray.groupie.Item<*>?): Boolean {
+        if (other is CarouselCardItem) {
+            return colorRes == other.colorRes
+        }
+        return false
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is CarouselCardItem) {
+            return colorRes == other.colorRes
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return colorRes.hashCode()
+    }
+
 }

@@ -44,44 +44,40 @@ class MainActivity : AppCompatActivity() {
         }
 
         Section(HeaderItem(R.string.carousel_title, R.string.carousel_subtitle)).apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                addAll(generateFancyItems(4))
-                add(innerSection)
-                addAll(generateFancyItems(10))
-                groupAdapter.update(listOf(this))
-            }
+            addAll(generateCarouselItems(8))
+            add(innerSection)
+            addAll(generateCarouselItems(10))
+            groupAdapter.update(listOf(this))
         }
 
         fab.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val newItem = boringFancyItems.mapIndexed { index, fancyItem ->
-                    if (index == 0) {
-                        val color = Color.argb(255, 0,
-                            255, 0)
-                        FancyItem(color, 1)
-                    } else {
-                        fancyItem
-                    }
+            val newItem = boringFancyItems.mapIndexed { index, fancyItem ->
+                if (index == 0) {
+                    val color = Color.argb(255, 0,
+                        255, 0)
+                    FancyItem(color, 1, index.toLong() * 2)
+                } else {
+                    fancyItem
                 }
-                group = makeCarouselGroup(newItem)
-                innerSection.update(listOf(group))
             }
+            group = makeCarouselGroup(newItem, 2)
+            innerSection.update(listOf(group))
         }
     }
 
-    private fun makeCarouselItem(items: List<Item<*>>): CarouselItem {
-        val carouselDecoration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            CarouselItemDecoration(getColor(R.color.colorPrimaryDark), 50)
-        } else {
-            TODO("VERSION.SDK_INT < M")
-        }
-        val carouselAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
-        carouselAdapter.addAll(items)
-        return CarouselItem(carouselDecoration, carouselAdapter)
-    }
+//    private fun makeCarouselItem(items: List<Item<*>>): CarouselItem {
+//        val carouselDecoration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            CarouselItemDecoration(getColor(R.color.colorPrimaryDark), 50)
+//        } else {
+//            TODO("VERSION.SDK_INT < M")
+//        }
+//        val carouselAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
+//        carouselAdapter.addAll(items)
+//        return CarouselItem(carouselDecoration, carouselAdapter)
+//    }
 
     private fun makeCarouselItemSection(items: List<Item<*>>): Section {
-        group = makeCarouselGroup(items)
+        group = makeCarouselGroup(items, 1)
         return Section().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 add(group)
@@ -89,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeCarouselGroup(items: List<Item<*>>): Group {
+    private fun makeCarouselGroup(items: List<Item<*>>, itemId: Long): Group {
         val carouselDecoration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             CarouselItemDecoration(getColor(R.color.colorPrimaryDark), 50)
         } else {
@@ -97,50 +93,59 @@ class MainActivity : AppCompatActivity() {
         }
         val carouselAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
         carouselAdapter.addAll(items)
-        return CarouselGroup(carouselAdapter, true, CarouselItem(carouselDecoration, carouselAdapter))
+        return CarouselGroup(carouselAdapter, true, CarouselItem(carouselDecoration, carouselAdapter, itemId))
     }
 
 
-    private fun makeCarouselItem2(items: List<Item<*>>): CarouselItem {
-        val carouselDecoration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            CarouselItemDecoration(getColor(R.color.colorPrimaryDark), 50)
-        } else {
-            TODO("VERSION.SDK_INT < M")
-        }
-        val carouselAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
-        for (i in 0..29) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if(i == 1) {
-                    carouselAdapter.add(CarouselCardItem("update"))
-                } else {
-                    carouselAdapter.add(CarouselCardItem(i.toString()))
-                }
-            }
-        }
-        return CarouselItem(carouselDecoration, carouselAdapter)
-    }
+//    private fun makeCarouselItem2(items: List<Item<*>>): CarouselItem {
+//        val carouselDecoration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            CarouselItemDecoration(getColor(R.color.colorPrimaryDark), 50)
+//        } else {
+//            TODO("VERSION.SDK_INT < M")
+//        }
+//        val carouselAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
+//        for (i in 0..29) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                if(i == 1) {
+//                    carouselAdapter.add(CarouselCardItem("update"))
+//                } else {
+//                    carouselAdapter.add(CarouselCardItem(i.toString()))
+//                }
+//            }
+//        }
+//        return CarouselItem(carouselDecoration, carouselAdapter)
+//    }
 
     private fun generateFancyItems(count: Int): MutableList<FancyItem> {
+        //val rnd = Random()
+        return MutableList(count) { index ->
+            val color = Color.argb(255, 0,
+                0, 255)
+            FancyItem(color, 1, index.toLong())
+        }
+    }
+
+    private fun generateCarouselItems(count: Int): MutableList<CarouselCardItem> {
         //val rnd = Random()
         return MutableList(count) {
             val color = Color.argb(255, 0,
                 0, 255)
-            FancyItem(color, 1)
+            CarouselCardItem(color.toString())
         }
     }
 
-    private fun generateFancyItems2(count: Int): MutableList<FancyItem> {
-        //val rnd = Random()
-        return MutableList(count) { index ->
-            if (index == 0) {
-                val color = Color.argb(255, 0,
-                    255, 0)
-                FancyItem(color, 1)
-            } else {
-                val color = Color.argb(255, 0,
-                    0, 255)
-                FancyItem(color, 1)
-            }
-        }
-    }
+//    private fun generateFancyItems2(count: Int): MutableList<FancyItem> {
+//        //val rnd = Random()
+//        return MutableList(count) { index ->
+//            if (index == 0) {
+//                val color = Color.argb(255, 0,
+//                    255, 0)
+//                FancyItem(color, 1)
+//            } else {
+//                val color = Color.argb(255, 0,
+//                    0, 255)
+//                FancyItem(color, 1)
+//            }
+//        }
+//    }
 }
