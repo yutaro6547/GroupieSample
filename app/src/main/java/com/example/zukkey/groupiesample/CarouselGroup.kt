@@ -1,28 +1,64 @@
 package com.example.zukkey.groupiesample
 
-import com.xwray.groupie.Group
-import com.xwray.groupie.GroupDataObserver
-import com.xwray.groupie.Item
+import android.support.v7.widget.RecyclerView
+import com.xwray.groupie.*
 
-class CarouselGroup: Group {
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+/**
+ * A group that contains a single carousel item and is empty when the carousel is empty
+ */
+class CarouselGroup(
+    val adapter: GroupAdapter<ViewHolder>,
+    var isEmpty: Boolean = true,
+    val carouselItem: CarouselItem
+) : Group {
+
+    private var groupDataObserver: GroupDataObserver? = null
+
+    private val adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            val empty = adapter.itemCount == 0
+            if (empty && !isEmpty) {
+                isEmpty = empty
+                groupDataObserver!!.onItemRemoved(carouselItem, 0)
+            }
+        }
+
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            val empty = adapter.itemCount == 0
+            if (isEmpty && !empty) {
+                isEmpty = empty
+                groupDataObserver!!.onItemInserted(carouselItem, 0)
+            }
+        }
     }
 
-    override fun unregisterGroupDataObserver(groupDataObserver: GroupDataObserver) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getItemCount(): Int {
+        return if (isEmpty) 0 else 1
+    }
+
+    init {
+        isEmpty = adapter.itemCount == 0
+        adapter.registerAdapterDataObserver(adapterDataObserver)
     }
 
     override fun getItem(position: Int): Item<*> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return if (position == 0 && !isEmpty)
+            carouselItem
+        else
+            throw IndexOutOfBoundsException()
     }
 
     override fun getPosition(item: Item<*>): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return if (item === carouselItem && !isEmpty) 0 else -1
     }
 
     override fun registerGroupDataObserver(groupDataObserver: GroupDataObserver) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.groupDataObserver = groupDataObserver
     }
 
+    override fun unregisterGroupDataObserver(groupDataObserver: GroupDataObserver) {
+        this.groupDataObserver = null
+    }
 }
